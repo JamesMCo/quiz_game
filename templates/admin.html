@@ -43,6 +43,19 @@
                 {}
               </ul>
             </div>
+            <br>
+            <div class="card dark-purple lighten-5">
+              <div class="card-content">
+                <h5 class="center">Get New Questions</h5>
+                <div class="card-action">
+                  <div class="row">
+                    <a class="waves-effect waves-purple btn-large deep-purple col s4" onclick="$.get('/get_otdb_qs?quant=5'); location.reload();">5</a>
+                    <a class="waves-effect waves-purple btn-large deep-purple col s4" onclick="$.get('/get_otdb_qs?quant=10'); location.reload();">10</a>
+                    <a class="waves-effect waves-purple btn-large deep-purple col s4" onclick="$.get('/get_otdb_qs?quant=20'); location.reload();">20</a>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

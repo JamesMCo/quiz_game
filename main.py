@@ -1,5 +1,5 @@
 """A quiz game that reads from a json file"""
-import hug, json, uuid
+import base64, hug, json, random, requests, uuid
 
 players = {}
 questions = []
@@ -50,7 +50,7 @@ class Question:
         return self.answers
 
     def get_correct(self):
-        return self.answers[self.correct]
+        return self.correct
 
 
 @hug.get("/init", output=hug.output_format.text)
@@ -160,5 +160,23 @@ def get_index():
 def get_clientjs():
     """The main client code"""
     return static["client"]
+
+@hug.get("/get_otdb_qs")
+def get_otdb_qs(quant):
+    """Fills the question list with the requested number of questions from the Open Trivia Database"""
+    global questions
+    questions = []
+    r = requests.get("http://www.opentdb.com/api.php?amount=" + str(quant) + "&encode=base64").json()
+    for q in r["results"]:
+        if base64.b64decode(q["type"]).decode() == "multiple":
+            answers = [base64.b64decode(q["correct_answer"]).decode()]
+            for a in q["incorrect_answers"]:
+                answers.append(base64.b64decode(a).decode())
+                random.shuffle(answers)
+        else:
+            answers = ["True", "False"]
+        Question(base64.b64decode(q["question"]).decode(), answers, base64.b64decode(q["correct_answer"]).decode())
+    return "Success!"
+
 
 load_statics()
