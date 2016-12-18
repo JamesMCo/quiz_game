@@ -178,5 +178,6 @@ def get_otdb_qs(quant):
         Question(base64.b64decode(q["question"]).decode(), answers, base64.b64decode(q["correct_answer"]).decode())
     return "Success!"
 
-
-load_statics()
+if __name__ == '__main__':
+    load_statics()
+    hug.API(__name__).http.serve(80, True)
