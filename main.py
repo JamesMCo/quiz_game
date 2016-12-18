@@ -11,6 +11,7 @@ class Player:
         self.id        = str(uuid.uuid4())
         self.attempted = 0
         self.correct   = 0
+        self.restarts  = 0
         global players
         players[self.id] = self
 
@@ -28,6 +29,11 @@ class Player:
 
     def inc_correct(self):
         self.correct += 1
+
+    def restart(self):
+        self.attempted = 0
+        self.correct   = 0
+        self.restarts += 1
 
 class Question:
     def __init__(self, question, answers, correct):
@@ -59,9 +65,9 @@ def init(uuid):
     try:
         global players
         del players[uuid]
-        return "Success!"
+        hug.redirect.to("/")
     except:
-        return "Player not found!"
+        hug.redirect.to("/")
 
 @hug.get("/admin", output=hug.output_format.html)
 def admin():
@@ -69,10 +75,10 @@ def admin():
     global players
     global questions
     global static
-    player_card = "<li id='{}'><div class='collapsible-header'>{}<i class='material-icons right' onclick='$.get(\"delete?uuid={}\"); $(\"#{}\").remove()'>delete</i></div><div class='collapsible-body'>• <span title='{}'>Hover for UUID</span><br>• Questions: {}/{}</div></li>\n"
+    player_card = "<li id='{}'><div class='collapsible-header'>{}<i class='material-icons right' onclick='$.get(\"delete?uuid={}\"); $(\"#{}\").remove()'>delete</i></div><div class='collapsible-body'>• <span title='{}'>Hover for UUID</span><br>• Questions: {}/{}<br>• Restarts: {}</div></li>\n"
     players_concat = ""
     for i in players:
-        players_concat += player_card.format(players[i].id, players[i].name, players[i].id, players[i].id, players[i].id, players[i].correct, players[i].attempted)
+        players_concat += player_card.format(players[i].id, players[i].name, players[i].id, players[i].id, players[i].id, players[i].correct, players[i].attempted, players[i].restarts)
     question_card = "<li><div class='collapsible-header'>{}</div><div class='collapsible-body'>{}Correct: {}</div></li>\n"
     questions_concat = ""
     for i in questions:
@@ -88,7 +94,7 @@ def load_statics():
     global questions
     global static
 
-    for file in ["admin", "index", "question"]:
+    for file in ["admin", "end", "index", "question"]:
         with open("templates/" + file + ".html") as f:
             static[file] = f.read()
     for file in ["client"]:
@@ -116,7 +122,7 @@ def get_next_q(uuid):
                 buttons += "<a class='waves-effect waves-light btn-large' style='width: 100%; background-color: " + colours.pop(0) +  ";' onclick='get_answer(\"" + uuid + "\", \"" + i + "\")'>" + i + "</a><br><br>\n"
             return static["question"].format(q.get_question(), buttons)
         else:
-            return static["question"].format("Well done! You scored: " + str(players[uuid].correct) + "/" + str(players[uuid].attempted), "")
+            return static["end"].format(players[uuid].name, str(players[uuid].correct), str(players[uuid].attempted), uuid, uuid)
 
 @hug.get("/ans", output=hug.output_format.text)
 def get_ans(uuid):
@@ -134,6 +140,16 @@ def correct(uuid):
     else:
         players[uuid].inc_correct()
         return "Success!"
+
+@hug.get("/restart")
+def restart(uuid):
+    """Restart the quiz for the given player"""
+    if uuid not in players:
+        hug.redirect.to("/")
+    else:
+        players[uuid].restart()
+        hug.redirect.to("/next?uuid=" + uuid)
+
 
 @hug.get("/", output=hug.output_format.html)
 def get_index():
