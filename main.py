@@ -75,10 +75,10 @@ def admin():
     global players
     global questions
     global static
-    player_card = "<li id='{}'><div class='collapsible-header'>{}<i class='material-icons right' onclick='$.get(\"delete?uuid={}\"); $(\"#{}\").remove()'>delete</i></div><div class='collapsible-body'>• <span title='{}'>Hover for UUID</span><br>• Questions: {}/{}<br>• Restarts: {}</div></li>\n"
+    player_card = "<li id='{}'><div class='collapsible-header'>{}<i class='material-icons right' onclick='delete_player(\"{}\")')'>delete</i></div><div class='collapsible-body'>• <span title='{}'>Hover for UUID</span><br>• Questions: {}/{}<br>• Restarts: {}</div></li>\n"
     players_concat = ""
     for i in players:
-        players_concat += player_card.format(players[i].id, players[i].name, players[i].id, players[i].id, players[i].id, players[i].correct, players[i].attempted, players[i].restarts)
+        players_concat += player_card.format(players[i].id, players[i].name, players[i].id, players[i].id, players[i].correct, players[i].attempted, players[i].restarts)
     question_card = "<li><div class='collapsible-header'>{}</div><div class='collapsible-body'>{}Correct: {}</div></li>\n"
     questions_concat = ""
     for i in questions:

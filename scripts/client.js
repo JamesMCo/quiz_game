@@ -25,3 +25,8 @@ function get_answer(uuid, chosen) {
     }
   })
 }
+
+function delete_player(uuid) {
+  $.get("delete?uuid=" + uuid)
+  $("#" + uuid).fadeOut(350, function(){$("#" + uuid).remove()})
+}
