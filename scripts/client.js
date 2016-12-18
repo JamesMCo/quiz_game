@@ -30,3 +30,9 @@ function delete_player(uuid) {
   $.get("delete?uuid=" + uuid)
   $("#" + uuid).fadeOut(350, function(){$("#" + uuid).remove()})
 }
+
+function namekeypress(event) {
+  if (event.keyCode == 13) {
+    $("#enterbutton").click();
+  }
+}
