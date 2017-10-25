@@ -56,7 +56,8 @@ class Question:
 @hug.get("/init", output=hug.output_format.text)
 def init(name):
     """Initialises a player"""
-    cur = Player(name)
+    print(name.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"))
+    cur = Player(name.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;"))
     return cur.id
 
 @hug.get("/delete")

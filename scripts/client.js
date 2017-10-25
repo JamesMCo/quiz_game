@@ -1,7 +1,7 @@
 function init_player() {
   if ($("#playername").val() !== "") {
     $.ajax({
-      url: "/init?name=" + $("#playername").val(),
+      url: "/init?name=" + encodeURIComponent($("#playername").val()),
       type: "GET",
       success: function(data) {
         window.location = "/next?uuid=" + data
