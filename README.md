@@ -14,4 +14,4 @@ To add your own questions, add them to the "questions.json" file, following the 
 
 
 
-Have fun! -Jammy4312
+Have fun! -James C.
